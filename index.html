@@ -45,7 +45,9 @@
     .story-copy p{line-height:1.9}
     .chat{max-width:470px;margin:auto}
     .chat-title{text-align:center;font-family:"Patrick Hand";font-size:27px;color:var(--rose);margin-bottom:18px}
-    .bubble{background:white;border:1px solid var(--line);padding:15px 18px;border-radius:18px 18px 18px 5px;box-shadow:0 10px 25px rgba(65,37,30,.07);margin:13px 0;opacity:0;transform:translateY(16px);transition:.6s}
+    .bubble{background:white;border:1px solid var(--line);padding:15px 18px;border-radius:18px 18px 18px 5px;box-shadow:0 10px 25px rgba(65,37,30,.07);margin:13px 0;opacity:0;transform:translateY(16px);transition:
+    opacity 1s ease,
+    transform 1s cubic-bezier(.22,1,.36,1);}
     .bubble.show{opacity:1;transform:none}
     .bubble.me{margin-left:35px;border-radius:18px 18px 5px 18px;background:#f7e1e4}
     .bubble small{display:block;font-size:11px;opacity:.55;margin-bottom:4px}
@@ -2320,6 +2322,76 @@ body.website-unlocked{
   object-position:center 35%;
 }
 
+/* =========================================
+   STEP 4 — OUR LITTLE STORY
+   MOBILE RESPONSIVE FIX
+========================================= */
+
+.memory-card{
+  box-sizing:border-box;
+  width:330px;
+  max-width:100%;
+}
+
+.memory-card .birthday-photo{
+  display:block;
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  object-position:center;
+  box-sizing:border-box;
+}
+
+@media(max-width:760px){
+
+  .memory-card{
+    display:block;
+    width:100%;
+    max-width:100%;
+    margin-left:0;
+    margin-right:0;
+    box-sizing:border-box;
+  }
+
+  .memory-card .birthday-photo{
+    display:block;
+    width:100%;
+    height:205px;
+    object-fit:cover;
+    object-position:center;
+  }
+
+  .memory-card figcaption{
+    font-size:21px;
+    line-height:1.25;
+    padding-top:8px;
+  }
+
+}
+
+/* =========================================
+   STEP 4 — FIRST MEMORY PHOTO
+========================================= */
+
+.first-memory-photo .birthday-photo{
+  width:100%;
+  height:320px;
+  object-fit:cover;
+  object-position:center 42%;
+  display:block;
+}
+
+@media(max-width:760px){
+
+  .first-memory-photo .birthday-photo{
+    width:100%;
+    height:210px;
+    object-fit:cover;
+    object-position:center 42%;
+  }
+
+}
+
 </style>
 </head>
 <body class="website-locked">
@@ -2450,7 +2522,7 @@ body.website-unlocked{
             <div class="memory-number">01 · THE BEGINNING</div>
             <h3>We Met</h3>
             <p>Two people meeting as friends at <b>Maritim Muda Nusantara</b>, with no idea what the story would become.</p>
-            <figure class="memory-card">
+            <figure class="memory-card first-memory-photo">
               
               <img class="birthday-photo" src="images/foto-maritim.jpeg"  alt="Diyan ♡">
 
@@ -2561,17 +2633,36 @@ body.website-unlocked{
 });
 
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting){
-          entry.target.querySelectorAll('.bubble').forEach((b,i) => {
-            setTimeout(()=>b.classList.add('show'), i*420);
-          });
-          entry.target.querySelectorAll('.memory').forEach((m,i) => {
-            setTimeout(()=>m.classList.add('visible'), i*180);
-          });
-        }
+
+  entries.forEach(entry => {
+
+    if(entry.isIntersecting){
+
+      entry.target.querySelectorAll('.bubble').forEach((b,i) => {
+
+        setTimeout(() => {
+          b.classList.add('show');
+        }, 800 + (i * 750));
+
       });
-    }, {threshold:.18});
+
+      entry.target.querySelectorAll('.memory').forEach((m,i) => {
+
+        setTimeout(() => {
+          m.classList.add('visible');
+        }, i * 180);
+
+      });
+
+      observer.unobserve(entry.target);
+
+    }
+
+  });
+
+}, {
+  threshold:0.35
+});
 
     observer.observe(story);
     observer.observe(memories);
